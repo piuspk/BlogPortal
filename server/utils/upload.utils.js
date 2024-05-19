@@ -1,8 +1,8 @@
 const multer = require('multer');
 const { GridFsStorage } = require('multer-gridfs-storage');
-
+require("dotenv").config();
 const storage = new GridFsStorage({
-    url: 'mongodb://127.0.0.1:27017/ragnar_Blog',
+    url: process.env.URL,
     options: { useNewUrlParser: true, useUnifiedTopology: true },
     file: (req, file) => {
         const match = ["image/png", "image/jpg", "image/jpeg"];
