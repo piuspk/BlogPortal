@@ -7,11 +7,12 @@ const PORT = 8000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000", // replace with the origin of your client-side application
+    origin: process.env.BASE_URL, // replace with the origin of your client-side application
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
   })

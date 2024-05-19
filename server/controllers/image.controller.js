@@ -1,7 +1,8 @@
 const grid = require('gridfs-stream');
 const mongoose = require('mongoose');
+require("dotenv").config();
 
-const url = 'http://localhost:8000';
+const url = process.env.BASE_URL;
 
 let gfs, gridfsBucket;
 const conn = mongoose.connection;

@@ -12,7 +12,7 @@ const session = require("express-session");
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000", // replace with the origin of your client-side application
+    origin: process.env.BASE_URL, // replace with the origin of your client-side application
     credentials: true,
     methods: "GET,POST,PUT,DELETE",
   })
@@ -101,7 +101,7 @@ module.exports.login = async (req, res) => {
 module.exports.userLogout = async (req, res) => {
   try {
     res.clearCookie("usertoken");
-    res.redirect("http://localhost:3000");
+    res.redirect(process.env.BASE_URL);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
