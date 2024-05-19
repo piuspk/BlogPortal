@@ -9,10 +9,7 @@
 - 🖥️ Usage
 - 📦 Components Overview
 - 🔗 API Endpoints
-- 🤝 Contributing
-- 📜 License
-
-## 🎯 Introduction
+# 🎯 Introduction
 This is a full-stack Blog Application that allows users to create, edit, delete, and like blog posts. It also supports user authentication, commenting on posts, and viewing detailed information about each post.
 
 # Tree Structure of the Project
