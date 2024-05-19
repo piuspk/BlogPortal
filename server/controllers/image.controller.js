@@ -1,6 +1,6 @@
 const grid = require('gridfs-stream');
 const mongoose = require('mongoose');
-require("dotenv").config();
+require('dotenv').config();
 
 const url = process.env.BASE_URL;
 
@@ -8,7 +8,7 @@ let gfs, gridfsBucket;
 const conn = mongoose.connection;
 conn.once('open', () => {
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-        bucketName: 'photos'
+        bucketName: 'photos',
     });
     gfs = grid(conn.db, mongoose.mongo);
     gfs.collection('photos');
@@ -17,11 +17,11 @@ conn.once('open', () => {
 module.exports.uploadimage = async (req, res) => {
     try {
         if (!req.file) {
-            console.error("No file received");
-            return res.status(404).json("File not found");
+            console.error('No file received');
+            return res.status(404).json('File not found');
         }
 
-        console.log("File received:", req.file);
+        console.log('File received:', req.file);
 
         const imageUrl = `${url}/image/${req.file.filename}`;
         res.status(200).json(imageUrl);
