@@ -82,21 +82,21 @@ const CreatePost = () => {
   useEffect(() => {
     const getImage = async () => {
       if (file) {
-        const data = new FormData();
-        data.append("name", file.name);
-        data.append("file", file);
-
-        try {
-          const response = await axios.post(`${BASE_URL}/image/upload`, data, {
-            withCredentials: true,
-          });
-          setPost(prevPost => ({ ...prevPost, picture: response.data }));
-        } catch (error) {
-          console.error("Error uploading file:", error);
-          toast.error("Error uploading file");
-        }
+          const data = new FormData();
+          data.append("name", file.name);
+          data.append("file", file);
+  
+          try {
+              const response = await axios.post(`${BASE_URL}/image/upload`, data, {
+                  withCredentials: true,
+              });
+              setPost(prevPost => ({ ...prevPost, picture: response.data }));
+          } catch (error) {
+              console.error("Error uploading file:", error);
+              toast.error("Error uploading file");
+          }
       }
-    };
+  };
     getImage();
     setPost(prevPost => ({
       ...prevPost,
@@ -156,5 +156,3 @@ const CreatePost = () => {
 };
 
 export default CreatePost;
-
-

@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 8000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
+app.use('/images', express.static('public/images'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(

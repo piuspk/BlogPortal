@@ -1,19 +1,6 @@
-const grid = require('gridfs-stream');
-const mongoose = require('mongoose');
-require('dotenv').config();
-
-const url = process.env.BASE_URL;
-
-let gfs, gridfsBucket;
-const conn = mongoose.connection;
-conn.once('open', () => {
-    gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
-        bucketName: 'photos',
-    });
-    gfs = grid(conn.db, mongoose.mongo);
-    gfs.collection('photos');
-});
-
+const ImageModel = require("../model/image.model");
+require("dotenv").config();
+const url = process.env.BACKEND_URL;
 module.exports.uploadimage = async (req, res) => {
     try {
         if (!req.file) {
@@ -21,9 +8,14 @@ module.exports.uploadimage = async (req, res) => {
             return res.status(404).json('File not found');
         }
 
-        console.log('File received:', req.file);
+        const imageData = await ImageModel.create({ name: req.file.originalname, image: req.file.filename });
 
-        const imageUrl = `${url}/image/${req.file.filename}`;
+        if (!imageData) {
+            console.error('Image data not created');
+            return res.status(500).json({ error: 'Error creating image data' });
+        }
+
+        const imageUrl = `${url}/images/${req.file.filename}`;
         res.status(200).json(imageUrl);
     } catch (error) {
         console.error('Error processing upload:', error);
@@ -33,13 +25,8 @@ module.exports.uploadimage = async (req, res) => {
 
 module.exports.getImage = async (req, res) => {
     try {
-        const file = await gfs.files.findOne({ filename: req.params.filename });
-        if (!file) {
-            return res.status(404).json({ msg: 'File not found' });
-        }
-
-        const readStream = gridfsBucket.openDownloadStream(file._id);
-        readStream.pipe(res);
+        const data = await ImageModel.find();
+        res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }

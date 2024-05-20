@@ -6,8 +6,15 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  TextField,
 } from "@mui/material";
-import { Delete, Edit, ThumbUp, ThumbUpOutlined, ArrowDropDown } from "@mui/icons-material"; // Import ArrowDropDown icon
+import {
+  Delete,
+  Edit,
+  ThumbUp,
+  ThumbUpOutlined,
+  ArrowDropDown,
+} from "@mui/icons-material";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { BASE_URL } from "../../service/api";
 import { useSelector } from "react-redux";
@@ -16,9 +23,9 @@ import axios from "axios";
 import Comments from "./comments/Comments";
 
 const Container = styled(Box)(({ theme }) => ({
-  margin: "50px 100px",
-  [theme.breakpoints.down("md")]: {
-    margin: 0,
+  margin: "50px 20px", // Adjusted margin for smaller screens
+  [theme.breakpoints.up("sm")]: {
+    margin: "50px auto", // Centered margin for larger screens
   },
 }));
 
@@ -26,6 +33,7 @@ const Image = styled("img")({
   width: "100%",
   height: "50vh",
   objectFit: "cover",
+  marginTop: "-2.5rem",
 });
 
 const EditIcon = styled(Edit)`
@@ -61,22 +69,49 @@ const Heading = styled(Typography)`
   word-break: break-word;
 `;
 
-const Author = styled(Box)(({ theme }) => ({
-  color: "#878787",
-  display: "flex",
-  margin: "20px 0",
-  [theme.breakpoints.down("sm")]: {
-    display: "block",
-  },
-}));
+const AuthorContainer = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  align-items: center;
+  flex-direction: column; // Align in column by default for smaller screens
+  @media (min-width: 600px) {
+    flex-direction: row; // Align in row for larger screens
+  }
+`;
+
+const Author = styled(Box)`
+  color: #878787;
+  margin-left: 20px; // Added margin to the left
+`;
 
 const Description = styled(Typography)`
   word-break: break-word;
+  margin-top: 20px;
+  margin-left: 20px; // Added margin to the left
 `;
 
 const LikeButton = styled(IconButton)`
   margin-left: 10px;
 `;
+
+const LikeContainer = styled(Box)`
+  display: flex;
+  align-items: center;
+  margin-right: 20px; // Added margin to the right
+`;
+
+const CommentsContainer = styled(Box)`
+  margin-top: 30px;
+`;
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  width: "100%",
+  margin: "10px 0",
+  [theme.breakpoints.up("sm")]: {
+    width: "80%",
+  },
+}));
 
 const DetailView = () => {
   const url =
@@ -178,43 +213,47 @@ const DetailView = () => {
         )}
       </Box>
       <Heading>{post.title}</Heading>
-      <Author>
-        <Link
-          to={`/?username=${post.username}`}
-          style={{ textDecoration: "none", color: "inherit" }}
-        >
-          <Typography>
-            Author: <span style={{ fontWeight: 700 }}>{post.username}</span>
-          </Typography>
-        </Link>
-        <Typography style={{ marginLeft: "auto" }}>
-          {new Date(post.createdDate).toDateString()}
-        </Typography>
-      </Author>
-      <Box display="flex" alignItems="center">
-        <Description>{post.description}</Description>
-        <LikeButton onClick={toggleLike} color="primary">
-          {liked ? <ThumbUp /> : <ThumbUpOutlined />}
-        </LikeButton>
-        <Typography>{likes}</Typography>
-        <LikeButton onClick={handleLikeButtonClick} color="primary">
-          <ArrowDropDown /> {/* Add ArrowDropDown icon */}
-        </LikeButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {usernames.length > 0 ? (
-            usernames.map((username) => (
-              <MenuItem key={username}>{username}</MenuItem>
-            ))
-          ) : (
-            <MenuItem>No likes yet</MenuItem>
-          )}
-        </Menu>
-      </Box>
-      <Comments post={post} />
+      <AuthorContainer>
+        <Author>
+          <Link
+            to={`/?username=${post.username}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <Typography>
+              Author: <span style={{ fontWeight: 700 }}>{post.username}</span>
+            </Typography>
+          </Link>
+        </Author>
+        <Box>
+          <Typography>{new Date(post.createdDate).toDateString()}</Typography>
+          <LikeContainer>
+            <LikeButton onClick={toggleLike} color="primary">
+              {liked ? <ThumbUp /> : <ThumbUpOutlined />}
+            </LikeButton>
+            <Typography>{likes}</Typography>
+            <LikeButton onClick={handleLikeButtonClick} color="primary">
+              <ArrowDropDown />
+            </LikeButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              {usernames.length > 0 ? (
+                usernames.map((username) => (
+                  <MenuItem key={username}>{username}</MenuItem>
+                ))
+              ) : (
+                <MenuItem>No likes yet</MenuItem>
+              )}
+            </Menu>
+          </LikeContainer>
+        </Box>
+      </AuthorContainer>
+      <Description>{post.description}</Description>
+      <CommentsContainer>
+        <Comments post={post} />
+      </CommentsContainer>
       <ToastContainer />
     </Container>
   );

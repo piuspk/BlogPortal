@@ -3,6 +3,7 @@ const CommentModel = require('../model/comment.model');
 const { User } = require("../model/user.model"); // Use destructuring here
 // Function to create a post
 module.exports.posts = async (req, res) => {
+    console.log("post save?")
     try {
         const post = new PostsModel(req.body);
         await post.save();
