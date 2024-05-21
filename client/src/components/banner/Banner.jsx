@@ -8,7 +8,7 @@ const Image = styled(Box)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-   margin-top : -2.5rem;
+   margin-top : -2.7rem;
 `;
 
 const Heading = styled(Typography)`
