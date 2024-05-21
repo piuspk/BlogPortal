@@ -1,24 +1,22 @@
 const multer = require('multer');
-const express = require("express");
-const app = express();
+const { GridFsStorage } = require('multer-gridfs-storage');
 const path = require('path');
-app.use(express.static('public'));
 require('dotenv').config();
 
-const storage = multer.diskStorage({
-  
-
-    destination : (req,file,cb)=>{
-        
-        cb(null, 'public/images')
-    },
-    filename : (req,file,cb)=>{
-        cb(null,file.fieldname + "_" + Date.now() + path.extname(file.originalname))
+const storage = new GridFsStorage({
+    url: process.env.URL,
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
+    file: (req, file) => {
+        const match = ["image/png", "image/jpg","image/jpeg"];
+        if (match.indexOf(file.mimetype) === -1)
+            return `${Date.now()}-blog-${file.originalname}`;
+        return {
+            bucketName: 'uploads', // collection name in MongoDB
+            filename: `${Date.now()}-blog-${file.originalname}`
+        };
     }
-
-
 });
 
-const upload = multer({ storage : storage });
+const upload = multer({ storage });
 
 module.exports = upload;

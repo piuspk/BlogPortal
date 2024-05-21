@@ -1,6 +1,24 @@
-const ImageModel = require("../model/image.model");
-require("dotenv").config();
+const mongoose = require('mongoose');
+const Grid = require('gridfs-stream');
+require('dotenv').config();
+
 const url = process.env.BACKEND_URL;
+
+const conn = mongoose.createConnection(process.env.URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+let gfs, gridfsBucket;
+
+conn.once('open', () => {
+    gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: 'uploads'
+    });
+    gfs = Grid(conn.db, mongoose.mongo);
+    gfs.collection('uploads');
+});
+
 module.exports.uploadimage = async (req, res) => {
     try {
         if (!req.file) {
@@ -8,14 +26,7 @@ module.exports.uploadimage = async (req, res) => {
             return res.status(404).json('File not found');
         }
 
-        const imageData = await ImageModel.create({ name: req.file.originalname, image: req.file.filename });
-
-        if (!imageData) {
-            console.error('Image data not created');
-            return res.status(500).json({ error: 'Error creating image data' });
-        }
-
-        const imageUrl = `${url}/images/${req.file.filename}`;
+        const imageUrl = `${url}/image/${req.file.filename}`;
         res.status(200).json(imageUrl);
     } catch (error) {
         console.error('Error processing upload:', error);
@@ -25,9 +36,17 @@ module.exports.uploadimage = async (req, res) => {
 
 module.exports.getImage = async (req, res) => {
     try {
-        const data = await ImageModel.find();
-        res.status(200).json(data);
+        const file = await gfs.files.findOne({ filename: req.params.filename });
+
+        if (!file) {
+            return res.status(404).json({ error: 'File not found' });
+        }
+
+        const readstream = gridfsBucket.openDownloadStream(file._id);
+        res.set('Content-Type', file.contentType);
+        readstream.pipe(res);
     } catch (error) {
-        res.status(500).json({ msg: error.message });
+        console.error('Error retrieving file:', error);
+        res.status(500).json({ error: error.message });
     }
 };

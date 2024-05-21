@@ -34,6 +34,7 @@ const Posts = () => {
         setPosts(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
+        setLoading(false);
       } finally {
         setLoading(false); // Set loading to false once fetching is complete
       }

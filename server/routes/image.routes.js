@@ -1,3 +1,4 @@
+//image.routes.js
 const imageController = require('../controllers/image.controller');
 const upload = require('../utils/upload.utils');
 
