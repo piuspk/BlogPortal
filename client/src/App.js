@@ -15,44 +15,17 @@ import Details from './components/postDetails/Details';
 import UpdatePost from './components/create/UpdatePost';
 import Email from './components/authent/forgotpassword/email';
 import OtpForget from './components/authent/forgotpassword/otpforget';
-import NewPassword from './components/authent/forgotpassword/newpassword'
-const ProtectedRoute = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+import NewPassword from './components/authent/forgotpassword/newpassword';
 
-  const checkAuthentication = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/login/success`, {
-        withCredentials: true,
-      });
-      setIsAuthenticated(true);
-      console.log("Authentication successful", response);
-    } catch (error) {
-      console.log("Error during authentication", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    checkAuthentication();
-  }, []);
-
-  if (isLoading) {
+const ProtectedRoute = ({ isAuthenticated, children }) => {
+  if (isAuthenticated === null) {
     return <Loader />;
   }
-
-  return isAuthenticated ? (
-    <>
-      {children}
-    </>
-  ) : (
-    <Navigate to="/login" replace />
-  );
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null for initial state
 
   const checkAuthentication = async () => {
     try {
@@ -75,19 +48,22 @@ function App() {
     { path: '/login', element: <Login /> },
     { path: '/', element: <Home /> },
     { path: '/email', element: <Email /> },
-    {
-      path: '/otpforget',
-                              element: <OtpForget/>,
-    },
-    {
-      path: '/resetpassword',
-      element: <NewPassword/>,
-    },
+    { path: '/otpforget', element: <OtpForget /> },
+    { path: '/resetpassword', element: <NewPassword /> },
     { path: '/contact', element: <Contact /> },
     { path: '/about', element: <About /> },
-    { path: '/create', element: <ProtectedRoute><CreatePost /></ProtectedRoute> },
-    { path: '/details/:id', element: <ProtectedRoute><Details /></ProtectedRoute> },
-    { path: '/update/:id', element: <ProtectedRoute><UpdatePost /></ProtectedRoute> },
+    { 
+      path: '/create', 
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><CreatePost /></ProtectedRoute> 
+    },
+    { 
+      path: '/details/:id', 
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><Details /></ProtectedRoute> 
+    },
+    { 
+      path: '/update/:id', 
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><UpdatePost /></ProtectedRoute> 
+    },
   ]);
 
   return (

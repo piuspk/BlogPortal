@@ -1,9 +1,8 @@
-const mongoose = require("mongoose");
-
+const mongoose = require('mongoose');
 const URL = process.env.URL;
-try {
-  mongoose.connect(URL);
-  console.log("Database connected successfully");
-} catch (error) {
-  console.log("error while connection with db", error);
-}
+
+mongoose.connect(URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log("Successfully Connected to Database!!"))
+.catch((error) => console.error("error", error));
