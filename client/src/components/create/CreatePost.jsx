@@ -29,6 +29,8 @@ const Container = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     margin: 0,
   },
+  backgroundColor: 'transparent',
+  color: '#e8e6e1',
 }));
 
 const Image = styled("img")({
@@ -48,6 +50,7 @@ const InputTextField = styled(InputBase)`
   flex: 1;
   margin: 0 30px;
   font-size: 25px;
+  color: #e8e6e1;
 `;
 
 const Textarea = styled(TextareaAutosize)`
@@ -55,6 +58,8 @@ const Textarea = styled(TextareaAutosize)`
   border: none;
   margin-top: 50px;
   font-size: 18px;
+  background-color: #10102e;
+  color: #e8e6e1;
   &:focus-visible {
     outline: none;
   }
@@ -79,6 +84,7 @@ const initialPost = {
 const Ad = styled(Add)`
   cursor: pointer;
   transition: transform 0.4s;
+  color: #e8e6e1;
 
   &:hover {
     transform: scale(1.2);
@@ -89,7 +95,6 @@ const CreatePost = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
-  console.log("user",user)
   const [post, setPost] = useState(initialPost);
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
@@ -165,7 +170,7 @@ const CreatePost = () => {
 
       <StyledFormControl>
         <label htmlFor="fileInput">
-          <Ad fontSize="large" color="action" />
+          <Ad fontSize="large" />
         </label>
         <input
           type="file"
@@ -194,8 +199,8 @@ const CreatePost = () => {
                 text={`${imageUploadProgress}%`}
                 styles={buildStyles({
                   textSize: '30px',
-                  pathColor: '#3f51b5',
-                  textColor: '#3f51b5',
+                  pathColor: '#193bfc',
+                  textColor: '#fff',
                 })}
               />
             </div>
