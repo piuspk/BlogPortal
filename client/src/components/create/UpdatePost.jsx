@@ -6,6 +6,7 @@ import {
   Button,
   InputBase,
   FormControl,
+  Alert,
 } from "@mui/material";
 import { AddCircle as Add } from "@mui/icons-material";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -13,6 +14,15 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../../service/api";
 import { toast } from "react-toastify";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../../firebase"; // Adjust the import path as necessary
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css"; // Import the required CSS
 
 const Container = styled(Box)(({ theme }) => ({
   margin: "50px 100px",
@@ -31,6 +41,7 @@ const StyledFormControl = styled(FormControl)`
   margin-top: 10px;
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const InputTextField = styled(InputBase)`
@@ -48,14 +59,21 @@ const Textarea = styled(TextareaAutosize)`
     outline: none;
   }
 `;
-const Ad = styled(Add)`
 
+const Ad = styled(Add)`
   cursor: pointer;
   transition: transform 0.4s;
 
   &:hover {
     transform: scale(1.2);
   }
+`;
+
+const ProgressContainer = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
 `;
 
 const initialPost = {
@@ -71,10 +89,13 @@ const UpdatePost = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useSelector((state) => state.user.user);
+  console.log("helloooo",user)
   const { id } = useParams();
 
   const [post, setPost] = useState(initialPost);
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
 
   const url = post.picture
     ? post.picture
@@ -83,18 +104,36 @@ const UpdatePost = () => {
   useEffect(() => {
     const getImage = async () => {
       if (file) {
-        const data = new FormData();
-        data.append("name", file.name);
-        data.append("file", file);
-
         try {
-          const response = await axios.post(`${BASE_URL}/image/upload`, data, {
-            withCredentials: true,
-          });
-          setPost((prevPost) => ({ ...prevPost, picture: response.data }));
+          setImageUploadError(null);
+          const storage = getStorage(app);
+          const fileName = new Date().getTime() + "-" + file.name;
+          const storageRef = ref(storage, fileName);
+          const uploadTask = uploadBytesResumable(storageRef, file);
+
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setImageUploadProgress(progress.toFixed(0));
+            },
+            (error) => {
+              setImageUploadError("Image upload failed");
+              setImageUploadProgress(null);
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImageUploadProgress(null);
+                setImageUploadError(null);
+                setPost((prevPost) => ({ ...prevPost, picture: downloadURL }));
+              });
+            }
+          );
         } catch (error) {
-          console.error("Error uploading file:", error);
-          toast.error("Error uploading file");
+          setImageUploadError("Image upload failed");
+          setImageUploadProgress(null);
+          console.log(error);
         }
       }
     };
@@ -105,6 +144,7 @@ const UpdatePost = () => {
       username: user.username,
     }));
   }, [file]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -121,7 +161,6 @@ const UpdatePost = () => {
   }, [id]);
 
   const updatePost = async () => {
-    console.log("hfhbfhjsbf");
     try {
       await axios.put(`${BASE_URL}/updatePost/${id}`, post, {
         withCredentials: true,
@@ -157,9 +196,29 @@ const UpdatePost = () => {
           placeholder="Title"
           value={post.title}
         />
-        <Button variant="contained" color="primary" onClick={updatePost}>
-          Update
-        </Button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={updatePost}
+            disabled={imageUploadProgress !== null}
+          >
+            Update
+          </Button>
+          {imageUploadProgress !== null && (
+            <div style={{ width: 50, height: 50, marginLeft: 10 }}>
+              <CircularProgressbar
+                value={imageUploadProgress}
+                text={`${imageUploadProgress}%`}
+                styles={buildStyles({
+                  textSize: '30px',
+                  pathColor: '#3f51b5',
+                  textColor: '#3f51b5',
+                })}
+              />
+            </div>
+          )}
+        </div>
       </StyledFormControl>
 
       <Textarea
@@ -169,9 +228,14 @@ const UpdatePost = () => {
         onChange={handleChange}
         value={post.description}
       />
+
+      {imageUploadError && (
+        <div className="mt-4">
+          <Alert severity="error">{imageUploadError}</Alert>
+        </div>
+      )}
     </Container>
   );
 };
 
 export default UpdatePost;
-

@@ -4,10 +4,20 @@ import { BASE_URL } from "../../../service/api";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
+const OuterContainer = styled(Box)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #0d0d30; /* Optional: set a background for the outer container */
+  padding: 5px 0; /* Optional: add some padding */
+`;
+
 const Component = styled(Box)`
   margin-top: 30px;
-  background: #f5f5f5;
+  background: #171742;
+  width: 50%;
   padding: 10px;
+  border-radius: 5px;
 `;
 
 const Container = styled(Box)`
@@ -16,11 +26,10 @@ const Container = styled(Box)`
 `;
 
 const Name = styled(Typography)`
-    font-weight: 600,
-    font-size: 18px;
-    margin-right: 20px;
+  font-weight: 600;
+  font-size: 18px;
+  margin-right: 20px;
 `;
-
 
 const StyledDate = styled(Typography)`
   font-size: 13px;
@@ -32,9 +41,15 @@ const DeleteIcon = styled(Delete)`
   cursor: pointer;
 `;
 
+const CommentText = styled(Typography)`
+  background: #171742; /* Dark background */
+  color: #e0e0e0; /* Light text color */
+  padding: 10px;
+  border-radius: 4px; /* Optional: rounded corners */
+`;
+
 const DisplayComment = ({ comment, setToggle }) => {
   const user = useSelector((state) => state.user.user);
-  console.log("khushi", comment._id);
 
   const removeComment = async () => {
     try {
@@ -53,16 +68,18 @@ const DisplayComment = ({ comment, setToggle }) => {
   };
 
   return (
-    <Component>
-      <Container>
-        <Name>{comment.name}</Name>
-        <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
-        {comment.name === user.username && (
-          <DeleteIcon onClick={() => removeComment()} />
-        )}
-      </Container>
-      <Typography>{comment.comments}</Typography>
-    </Component>
+    <OuterContainer>
+      <Component>
+        <Container>
+          <Name>{comment.name}</Name>
+          <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
+          {comment.name === user.username && (
+            <DeleteIcon onClick={() => removeComment()} />
+          )}
+        </Container>
+        <CommentText>{comment.comments}</CommentText>
+      </Component>
+    </OuterContainer>
   );
 };
 

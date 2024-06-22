@@ -7,6 +7,7 @@ import { BASE_URL } from "../../../service/api";
 
 const Comp = styled(Box)`
   width: 400px;
+   background-color: #ebe4ed;
   margin: auto;
   box-shadow: 5px 2px 5px 2px rgb(0 0 0/0.4);
 `;
@@ -25,6 +26,7 @@ const Wrapp = styled(Box)`
 
 const LoginButton = styled(Button)`
   text-transform: none;
+  color:#474547;
   background-color: #d96ee7;
   border-radius: 7px;
   height: 45px;
@@ -115,14 +117,14 @@ const OtpForget = (props) => {
   return (
     <Comp>
       <Box>
-        <Text variant="h3">OTP</Text>
-        <Text variant="body1">
+        <Text style ={{color:"black"}} variant="h3">OTP</Text>
+        <Text style ={{color:"#474547"}} variant="body1">
           {otpExpired ? (
             "Click on 'Resend OTP' to get a new OTP"
           ) : (
             <>
               OTP sent to your{" "}
-              <span style={{ color: "#20b3f7" }}></span>{" "}
+              <span style={{ color: "black" }}></span>{" "}
               email
             </>
           )}
@@ -136,12 +138,12 @@ const OtpForget = (props) => {
             placeholder="Enter OTP"
           />
           {!otpExpired && (
-            <Text>Time Remaining: {counter}</Text>
+            <Text style ={{color:"#474547"}}>Time Remaining: {counter}</Text>
           )}
           {(otpExpired || fiveMinCounter === 0) && (
             <Text
               onClick={otpResendHandler}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color:"#474547" }}
             >
               {isResending ? "Resending..." : "Resend OTP"}
               {isResending && <div className="spinner"></div>}

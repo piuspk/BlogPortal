@@ -19,11 +19,11 @@ const StyledButton = styled(Button)`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    color: inherit;
+    color: #fff; /* Changed color to white */
 `;
 
 const ActiveStyledLink = styled(StyledLink)`
-    color: #fff;
+    color: #fff; /* Ensure color is white */
     background: #6495ED;
     padding: 5px 10px;
     border-radius: 5px;
@@ -51,7 +51,7 @@ const Categories = () => {
                             <StyledLink
                                 to="/"
                                 onClick={() => setActiveCategory('')}
-                                style={activeCategory === '' ? { color: '#fff', background: '#6495ED', padding: '5px 10px', borderRadius: '5px' } : {}}
+                                style={activeCategory === '' ? { color: '#fff', background: '#6495ED', padding: '5px 10px', borderRadius: '5px' } : { color: '#fff' }} // Ensuring white color
                             >
                                 All Categories
                             </StyledLink>
@@ -65,7 +65,7 @@ const Categories = () => {
                                 <StyledLink
                                     to={`/?category=${category.type}`}
                                     onClick={() => setActiveCategory(category.type)}
-                                    style={activeCategory === category.type ? { color: '#fff', background: '#6495ED', padding: '5px 10px', borderRadius: '5px' } : {}}
+                                    style={activeCategory === category.type ? { color: '#fff', background: '#6495ED', padding: '5px 10px', borderRadius: '5px' } : { color: '#fff' }} // Ensuring white color
                                 >
                                     {category.type}
                                 </StyledLink>

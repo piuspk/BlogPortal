@@ -8,6 +8,7 @@ import { BASE_URL } from "../../../service/api";
 const Comp = styled(Box)`
   width: 400px;
   margin: auto;
+   background-color: #ebe4ed;
   box-shadow: 5px 2px 5px 2px rgb(0 0 0 / 0.4);
 `;
 
@@ -93,7 +94,7 @@ const Email = () => {
   return (
     <Comp>
       <Box>
-        <Text variant="h3">Forgot Password</Text>
+        <Text style ={{color:"black"}}variant="h3">Forgot Password</Text>
         <Typo variant="body1">
           Enter your email & we'll send you an OTP for verification.
         </Typo>

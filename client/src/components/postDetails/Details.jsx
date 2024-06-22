@@ -23,9 +23,9 @@ import axios from "axios";
 import Comments from "./comments/Comments";
 
 const Container = styled(Box)(({ theme }) => ({
-  margin: "50px 20px", // Adjusted margin for smaller screens
+  margin: "50px 20px",
   [theme.breakpoints.up("sm")]: {
-    margin: "50px auto", // Centered margin for larger screens
+    margin: "50px auto",
   },
 }));
 
@@ -74,21 +74,21 @@ const AuthorContainer = styled(Box)`
   justify-content: space-between;
   margin: 20px 0;
   align-items: center;
-  flex-direction: column; // Align in column by default for smaller screens
+  flex-direction: column;
   @media (min-width: 600px) {
-    flex-direction: row; // Align in row for larger screens
+    flex-direction: row;
   }
 `;
 
 const Author = styled(Box)`
-  color: #878787;
-  margin-left: 20px; // Added margin to the left
+  color: #fff;
+  margin-left: 20px;
 `;
 
 const Description = styled(Typography)`
   word-break: break-word;
   margin-top: 20px;
-  margin-left: 20px; // Added margin to the left
+  margin-left: 20px;
 `;
 
 const LikeButton = styled(IconButton)`
@@ -98,7 +98,7 @@ const LikeButton = styled(IconButton)`
 const LikeContainer = styled(Box)`
   display: flex;
   align-items: center;
-  margin-right: 20px; // Added margin to the right
+  margin-right: 20px;
 `;
 
 const CommentsContainer = styled(Box)`
@@ -133,10 +133,11 @@ const DetailView = () => {
         const response = await axios.get(`${BASE_URL}/getPostsById/${id}`, {
           withCredentials: true,
         });
-        setPost(response.data);
-        setLikes(response.data.likes);
-        setLiked(response.data.likedBy.includes(user._id));
-        setLikedBy(response.data.likedBy || []);
+        const post = response.data;
+        setPost(post);
+        setLikes(post.likes);
+        setLiked(post.likedBy.includes(user._id));
+        setLikedBy(post.likedBy || []);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -145,8 +146,22 @@ const DetailView = () => {
   }, [id, user._id]);
 
   useEffect(() => {
-    fetchUsernames();
+    if (likedBy.length > 0) {
+      fetchUsernames();
+    }
   }, [likedBy]);
+
+  const fetchUsernames = async () => {
+    try {
+      const response = await axios.post(`${BASE_URL}/getUserDetails`, {
+        userIds: likedBy,
+      });
+      const fetchedUsernames = response.data.map((user) => user.username);
+      setUsernames(fetchedUsernames);
+    } catch (error) {
+      console.error("Error fetching usernames:", error);
+    }
+  };
 
   const deleteBlog = async () => {
     try {
@@ -176,18 +191,6 @@ const DetailView = () => {
     } catch (error) {
       console.error("Error toggling like:", error);
       toast.error("Error toggling like");
-    }
-  };
-
-  const fetchUsernames = async () => {
-    try {
-      const response = await axios.post(`${BASE_URL}/getUserDetails`, {
-        userIds: likedBy,
-      });
-      const usernames = response.data.map((user) => user.username);
-      setUsernames(usernames);
-    } catch (error) {
-      console.error("Error fetching usernames:", error);
     }
   };
 

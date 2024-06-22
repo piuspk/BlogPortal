@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './index.css';
 import { useRoutes, Navigate } from 'react-router-dom';
 import Login from "./components/authent/Login";
 import Home from "./components/Home/Home";
@@ -52,21 +53,22 @@ function App() {
     { path: '/resetpassword', element: <NewPassword /> },
     { path: '/contact', element: <Contact /> },
     { path: '/about', element: <About /> },
-    { 
-      path: '/create', 
-      element: <ProtectedRoute isAuthenticated={isAuthenticated}><CreatePost /></ProtectedRoute> 
+    {
+      path: '/create',
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><CreatePost /></ProtectedRoute>
     },
-    { 
-      path: '/details/:id', 
-      element: <ProtectedRoute isAuthenticated={isAuthenticated}><Details /></ProtectedRoute> 
+    {
+      path: '/details/:id',
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><Details /></ProtectedRoute>
     },
-    { 
-      path: '/update/:id', 
-      element: <ProtectedRoute isAuthenticated={isAuthenticated}><UpdatePost /></ProtectedRoute> 
+    {
+      path: '/update/:id',
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><UpdatePost /></ProtectedRoute>
     },
   ]);
 
   return (
+
     <div style={{ marginTop: 114 }}>
       <Header isAuthenticated={isAuthenticated} />
       {routes}

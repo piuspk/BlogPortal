@@ -7,6 +7,7 @@ import { BASE_URL } from "../../../service/api";
 
 const Comp = styled(Box)`
   width: 400px;
+   background-color: #ebe4ed;
   margin: auto;
   box-shadow: 5px 2px 5px 2px rgb(0 0 0/0.4);
 `;
@@ -96,7 +97,7 @@ const NewPassword = () => {
   return (
     <Comp>
       <Box>
-        <Text variant="h3">Reset Password</Text>
+        <Text style ={{color:"black"}} variant="h3">Reset Password</Text>
         <Typo variant="body1">
           Enter your new password and confirm it.
         </Typo>

@@ -5,6 +5,7 @@ import { BASE_URL } from "../../../service/api";
 
 import DisplayComment from "./DisplayComment";
 import axios from "axios";
+import { Person } from "@mui/icons-material";
 
 const Container = styled(Box)`
   margin-top: 100px;
@@ -19,8 +20,19 @@ const Image = styled("img")({
 
 const StyledTextArea = styled(TextareaAutosize)`
   height: 100px !important;
+  background: #10102e; /* Dark background */
+  color: #e0e0e0; /* Light text color */
   width: 100%;
   margin: 0 20px;
+  border: 1px solid #444444; /* Slightly lighter border */
+  padding: 10px;
+  resize: vertical; /* Allow vertical resize */
+  border-radius: 4px; /* Optional: rounded corners */
+  
+  &:focus {
+    outline: none;
+    border-color: #6495ED; /* Optional: change border color on focus */
+  }
 `;
 
 const initialValue = {
@@ -81,7 +93,8 @@ const Comments = ({ post }) => {
   return (
     <Box>
       <Container>
-        <Image src={url} alt="dp" />
+        {/* <Image src={url} alt="dp" /> */}
+        <Person/>
         <StyledTextArea
           rowsMin={5}
           placeholder="What's on your mind?"

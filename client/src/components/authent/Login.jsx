@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { Box, TextField, Button, styled, Typography, Link } from "@mui/material";
 import blogimg from "../../assets/blog.png";
 import axios from "axios";
+import { setUser } from '../../redux/user/userSlice';
 import { BASE_URL } from "../../service/api";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from 'react-redux';
-import { NavLink, useNavigate } from "react-router-dom";
-import { setUser } from '../../redux/actions/userActions'; 
+import { NavLink, useNavigate } from "react-router-dom"; 
 
 const Comp = styled(Box)`
   width: 400px;
   margin: auto;
+  background-color: #ebe4ed;
   box-shadow: 5px 2px 5px 2px rgb(0 0 0/0.4);
 `;
 

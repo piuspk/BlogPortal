@@ -82,10 +82,7 @@ module.exports.DeletePostById = async (req, res) => {
 
 
 module.exports.toggleLike = async (req, res) => {
-    console.log("params",req.params);
-    console.log("req user",req.user);
-    if ( !req.params.id || !req.user.id) {
-        
+    if (!req.params.id || !req.user.id) {
         return res.status(401).json({ msg: "Unauthorized" });
     }
 
@@ -102,21 +99,20 @@ module.exports.toggleLike = async (req, res) => {
         const index = post.likedBy.indexOf(userId);
 
         if (index === -1) {
-            // User has not liked the post yet
             post.likes += 1;
             post.likedBy.push(userId);
         } else {
-            // User has already liked the post, so unlike it
             post.likes -= 1;
             post.likedBy.splice(index, 1);
         }
 
         await post.save();
-        res.status(200).json({ msg: "Like toggled successfully", likes: post.likes });
+        res.status(200).json({ msg: "Like toggled successfully", likes: post.likes, likedBy: post.likedBy });
     } catch (error) {
         res.status(500).json(error);
     }
 };
+
 module.exports.GetUserDetails = async(req,res)=>{
     console.log("ka haal users")
     const { userIds } = req.body;
