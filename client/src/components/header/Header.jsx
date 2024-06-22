@@ -19,7 +19,7 @@ import { toggleTheme } from "../../redux/theme/themeSlice";
 import { DarkMode, LightMode } from "@mui/icons-material";
 
 const Component = styled(AppBar)`
-  background: #2c2c2c;
+  background: #4a1048;
   color: #ffffff;
   position:fixed;
   top:0;

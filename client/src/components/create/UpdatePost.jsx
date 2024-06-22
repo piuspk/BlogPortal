@@ -29,6 +29,8 @@ const Container = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     margin: 0,
   },
+  backgroundColor: 'transparent',
+  color: '#e8e6e1',
 }));
 
 const Image = styled("img")({
@@ -48,6 +50,7 @@ const InputTextField = styled(InputBase)`
   flex: 1;
   margin: 0 30px;
   font-size: 25px;
+  color: #e8e6e1;
 `;
 
 const Textarea = styled(TextareaAutosize)`
@@ -55,6 +58,8 @@ const Textarea = styled(TextareaAutosize)`
   border: none;
   margin-top: 50px;
   font-size: 18px;
+  background-color: #10102e;
+  color: #e8e6e1;
   &:focus-visible {
     outline: none;
   }
@@ -63,6 +68,7 @@ const Textarea = styled(TextareaAutosize)`
 const Ad = styled(Add)`
   cursor: pointer;
   transition: transform 0.4s;
+  color: #e8e6e1;
 
   &:hover {
     transform: scale(1.2);
