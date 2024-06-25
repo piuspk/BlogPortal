@@ -1,4 +1,6 @@
-/* General Settings */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 body {
   background-color: #07012c; /* Dark background color */
   color: #e0e0e0;           /* Light text color for contrast */

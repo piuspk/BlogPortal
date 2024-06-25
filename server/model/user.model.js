@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Password is required"],
   },
+  PictureUrl:{
+    type : String,
+    default : 'https://i.sstatic.net/l60Hf.png',
+  },  
 });
 
 UserSchema.pre('save', function(next) {
@@ -27,7 +31,7 @@ UserSchema.pre('save', function(next) {
             this.password = hash;
             next();
         })
-        .catch(error => next(error)); // Pass the error to the next middleware
+        .catch(error => next(error)); 
   });
 
 module.exports.User = mongoose.model("User", UserSchema);

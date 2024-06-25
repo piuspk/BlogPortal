@@ -9,4 +9,5 @@ module.exports = function(app) {
     app.delete("/deletePost/:id", authenticate, postsController.DeletePostById);
     app.post("/posts/toggleLike/:id", authenticate, postsController.toggleLike); 
     app.post("/getUserDetails", postsController.GetUserDetails)
+    
 };

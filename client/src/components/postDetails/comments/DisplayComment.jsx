@@ -18,10 +18,13 @@ const Component = styled(Box)`
   width: 50%;
   padding: 10px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Container = styled(Box)`
   display: flex;
+  align-items: center;
   margin-bottom: 5px;
 `;
 
@@ -29,6 +32,7 @@ const Name = styled(Typography)`
   font-weight: 600;
   font-size: 18px;
   margin-right: 20px;
+  color: #ffffff; /* Optional: Set the color of the name */
 `;
 
 const StyledDate = styled(Typography)`
@@ -39,6 +43,7 @@ const StyledDate = styled(Typography)`
 const DeleteIcon = styled(Delete)`
   margin-left: auto;
   cursor: pointer;
+  color: #ffffff; /* Optional: Set the color of the delete icon */
 `;
 
 const CommentText = styled(Typography)`
@@ -46,6 +51,14 @@ const CommentText = styled(Typography)`
   color: #e0e0e0; /* Light text color */
   padding: 10px;
   border-radius: 4px; /* Optional: rounded corners */
+  margin-top: 5px; /* Optional: add some margin between name/date and comment text */
+`;
+
+const Image = styled("img")`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 10px; /* Optional: Add some spacing between the image and name */
 `;
 
 const DisplayComment = ({ comment, setToggle }) => {
@@ -71,6 +84,7 @@ const DisplayComment = ({ comment, setToggle }) => {
     <OuterContainer>
       <Component>
         <Container>
+          <Image src={user.PictureUrl} alt="Profile" />
           <Name>{comment.name}</Name>
           <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
           {comment.name === user.username && (

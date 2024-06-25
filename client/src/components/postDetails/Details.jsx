@@ -7,6 +7,8 @@ import {
   Menu,
   MenuItem,
   TextField,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Delete,
@@ -36,30 +38,34 @@ const Image = styled("img")({
   marginTop: "-2.5rem",
 });
 
-const EditIcon = styled(Edit)`
-  margin: 5px;
-  padding: 5px;
-  border: 1px solid #878787;
-  border-radius: 10px;
-  transition: transform 0.4s;
+const EditIcon = styled(Edit)(({ theme }) => ({
+  margin: 5,
+  padding: 5,
+  border: `1px solid ${theme.palette.primary.main}`,
+  borderRadius: 10,
+  transition: "transform 0.4s",
+  [theme.breakpoints.up("sm")]: {
+    fontSize: "2rem", // Adjust the icon size for larger screens
+  },
+  "&:hover": {
+    transform: "scale(1.2)",
+  },
+}));
 
-  &:hover {
-    transform: scale(1.2);
-  }
-`;
-
-const DeleteIcon = styled(Delete)`
-  margin: 5px;
-  padding: 5px;
-  border: 1px solid #878787;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.4s;
-
-  &:hover {
-    transform: scale(1.2);
-  }
-`;
+const DeleteIcon = styled(Delete)(({ theme }) => ({
+  margin: 5,
+  padding: 5,
+  border: `1px solid ${theme.palette.error.main}`,
+  borderRadius: 10,
+  cursor: "pointer",
+  transition: "transform 0.4s",
+  [theme.breakpoints.up("sm")]: {
+    fontSize: "2rem", // Adjust the icon size for larger screens
+  },
+  "&:hover": {
+    transform: "scale(1.2)",
+  },
+}));
 
 const Heading = styled(Typography)`
   font-size: 38px;
@@ -126,6 +132,8 @@ const DetailView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const user = useSelector((state) => state.user.user);
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up("sm"));
 
   useEffect(() => {
     const fetchData = async () => {

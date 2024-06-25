@@ -207,7 +207,7 @@ module.exports.otpverify = async (req, res) => {
     });
   }
 };
-module.exports.changeinfo = async (req,res)=>{
+module.exports.changeinfo = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -236,3 +236,74 @@ module.exports.changeinfo = async (req,res)=>{
     res.status(500).json({ message: "Error resetting password", error: error });
   }
 }
+
+
+module.exports.updateUser = async (req, res) => {
+  console.log(req.user);
+  console.log("userndddame", req.body);
+
+  if (req.user.id !== req.params.userId) {
+    return res.status(403).json({ message: "You are not allowed to update this user" });
+  }
+
+  const updateFields = {};
+
+  if (req.body.password) {
+    if (req.body.password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    updateFields.password = hashedPassword; 
+  }
+
+  
+  if (req.body.username) {
+    if (req.body.username.length < 5 || req.body.username.length > 12) {
+      return res.status(400).json({ message: "Username must be between 5 and 12 characters" });
+    }
+    if (req.body.username.includes(" ")) {
+      return res.status(400).json({ message: "Username cannot contain spaces" });
+    }
+    if (req.body.username !== req.body.username.toLowerCase()) {
+      return res.status(400).json({ message: "Username must be lowercase" });
+    }
+    if (!req.body.username.match(/^[a-zA-Z0-9_]+$/)) {
+      return res.status(400).json({ message: "Username can only contain letters, numbers, and underscores" });
+    }
+    updateFields.username = req.body.username;
+  }
+
+  if (req.body.email !== undefined) {
+    if (req.body.email.trim() === '') {
+      return res.status(400).json({ error: "Email cannot be empty" });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(req.body.email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+  
+    updateFields.email = req.body.email;
+  }
+  
+  
+  if (req.body.PictureUrl) {
+    updateFields.PictureUrl = req.body.PictureUrl;
+  }
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { $set: updateFields },
+      { new: true }
+    ).lean();
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...rest } = updatedUser;
+    res.status(200).json(rest);
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while updating the user", error: error.message });
+  }
+};

@@ -9,6 +9,10 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
+  Avatar,
+  Divider
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
@@ -21,16 +25,16 @@ import { DarkMode, LightMode } from "@mui/icons-material";
 const Component = styled(AppBar)`
   background: #4a1048;
   color: #ffffff;
-  position:fixed;
-  top:0;
-\
+  position: fixed;
+  top: 0;
 `;
 
 const Container = styled(Toolbar)`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 
-  & > a {
+  & > a,
+  & > div {
     color: #ffffff;
     padding: 20px;
     text-decoration: none;
@@ -41,13 +45,20 @@ const Container = styled(Toolbar)`
   }
 
   @media (max-width: 600px) {
-    & > a,
-    & > div {
+    & > a {
       display: none;
     }
-    justify-content: flex-end; /* Ensure drawer icon is correctly positioned */
+    & > div {
+      display: flex;
+      padding:5px;
+      justify-content: flex-end;
+      align-items: center;
+      position:absolute;
+      right:0;
+    }
   }
 `;
+
 
 const LoginButton = styled(Button)`
   color: #ffffff;
@@ -82,9 +93,12 @@ const DrawerStyled = styled(Drawer)`
 
 const Header = ({ isAuthenticated }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { theme } = useSelector((state) => state.theme);
+  const { user } = useSelector((state) => state.user);
+
   const handleLogout = async () => {
     window.open(`${BASE_URL}/api/users/logout`, "_self");
   };
@@ -101,6 +115,14 @@ const Header = ({ isAuthenticated }) => {
       return;
     }
     setDrawerOpen(open);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const menuItems = (
@@ -151,9 +173,30 @@ const Header = ({ isAuthenticated }) => {
         <Link to="/about">ABOUT</Link>
         <Link to="/contact">CONTACT</Link>
         <div>
-         
           {isAuthenticated ? (
-            <LoginButton onClick={handleLogout}>Sign Out</LoginButton>
+            <>
+              <Button
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleMenuClick}
+                style={{ color: "#ffffff" }}
+              >
+               <Avatar src={user.PictureUrl } />
+              </Button>
+              <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}       
+                keepMounted
+                open={open}
+                onClose={handleMenuClose}
+              >
+                <MenuItem component={Link} to="/profile">{user.email}</MenuItem>
+                <MenuItem component={Link} to="/profile">{user.username}</MenuItem>
+                <Divider />
+                <MenuItem component={Link} to="/profile">Profile</MenuItem>
+                <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
+              </Menu>
+            </>
           ) : (
             <LoginButton onClick={handleLogin}>Log In</LoginButton>
           )}

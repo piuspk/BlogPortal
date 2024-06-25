@@ -17,6 +17,7 @@ import UpdatePost from './components/create/UpdatePost';
 import Email from './components/authent/forgotpassword/email';
 import OtpForget from './components/authent/forgotpassword/otpforget';
 import NewPassword from './components/authent/forgotpassword/newpassword';
+import Profile from './components/profile/Profile';
 
 const ProtectedRoute = ({ isAuthenticated, children }) => {
   if (isAuthenticated === null) {
@@ -56,6 +57,10 @@ function App() {
     {
       path: '/create',
       element: <ProtectedRoute isAuthenticated={isAuthenticated}><CreatePost /></ProtectedRoute>
+    },
+    {
+      path: '/profile',
+      element: <ProtectedRoute isAuthenticated={isAuthenticated}><Profile /></ProtectedRoute>
     },
     {
       path: '/details/:id',
