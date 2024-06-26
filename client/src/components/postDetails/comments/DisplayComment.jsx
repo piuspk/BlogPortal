@@ -3,6 +3,7 @@ import { Delete } from "@mui/icons-material";
 import { BASE_URL } from "../../../service/api";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const OuterContainer = styled(Box)`
   display: flex;
@@ -62,7 +63,9 @@ const Image = styled("img")`
 `;
 
 const DisplayComment = ({ comment, setToggle }) => {
-  const user = useSelector((state) => state.user.user);
+  // const user = useSelector((state) => state.user.user);
+  console.log("comment",comment);
+  const [user, setUser] = useState({});
 
   const removeComment = async () => {
     try {
@@ -79,6 +82,22 @@ const DisplayComment = ({ comment, setToggle }) => {
       console.log("Error while deleting comment", error);
     }
   };
+  useEffect(() => {
+    const getUser = async () => {
+      console.log("user", comment.userId);
+      try {
+        const res = await fetch(`${BASE_URL}/${comment.userId}`);
+        const data = await res.json();
+        if (res.ok) {
+          console.log("userhello", data);
+          setUser(data);
+        }
+      } catch (error) {
+        console.log("hello", error.message);
+      }
+    };
+    getUser();
+  }, [comment]);
 
   return (
     <OuterContainer>
@@ -88,7 +107,7 @@ const DisplayComment = ({ comment, setToggle }) => {
           <Name>{comment.name}</Name>
           <StyledDate>{new Date(comment.date).toDateString()}</StyledDate>
           {comment.name === user.username && (
-            <DeleteIcon onClick={() => removeComment()} />
+            <DeleteIcon onClick={() => removeComment()} />    
           )}
         </Container>
         <CommentText>{comment.comments}</CommentText>

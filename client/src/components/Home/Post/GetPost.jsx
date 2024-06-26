@@ -9,11 +9,14 @@ const Styl = styled(Box)`
   position: fixed;
   top: 80%;
   left: 50%;
+  transform: translate(-50%, -50%);
+  padding-bottom: 20px; // Add padding to ensure visibility
   @media (max-width: 600px) {
-    
-    top: 100%;
+    top: 90%;
+    padding-bottom: 30px; 
   }
 `;
+
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);

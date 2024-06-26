@@ -12,4 +12,5 @@ module.exports = function(app){
     app.post("/user/otpverify", userController.otpverify);
     app.post("/user/newpassword", userController.changeinfo);
     app.put("/update/:userId", authenticate, userController.updateUser)
+    app.get('/:userId', userController.getUser);
 }
